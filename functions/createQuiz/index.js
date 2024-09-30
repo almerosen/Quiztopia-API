@@ -10,6 +10,7 @@ const createQuiz = async (event) => {
 
     try {
 
+        // Get these from the decoded token in the verifyToken middleware
         const { userId, email } = event.user
 
         const { title, questions } = JSON.parse(event.body)

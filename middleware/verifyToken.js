@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken"
-import { sendError } from "../utils/responses"
+import { sendError } from "../utils/responses.js"
 
 export const verifyToken = {
     before: async (request) => {
         try {
-            const authHeader = request.event.body.authorization
+            const authHeader = request.event.headers.authorization
 
             if (!authHeader) {
                 return sendError(404, { message: "No token provided" })
