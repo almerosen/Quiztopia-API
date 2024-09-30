@@ -2,6 +2,7 @@ import { db } from "../../services/db.js";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from 'uuid';
 import { sendResponse, sendError } from "../../utils/responses.js";
+import { getUser } from "../../utils/getUser.js";
 
 export const handler = async (event) => {
     console.log(event)
@@ -11,21 +12,9 @@ export const handler = async (event) => {
 
         if (!email || !password) return sendError(400, { message: "Please provide both email and password" })
 
-        // Check if email (account) already exists:
-        const {Items} = await db.query({
-            TableName: "Quiztopia-UsersTable",
-            IndexName: "emailIndex",
-            KeyConditionExpression: "email = :email",
-            ExpressionAttributeValues: {
-                ":email": email
-            }
-           
-        })
-        console.log("Items:", Items, "Items length:", Items.length) // returns an array. Undefined if the email do not exist.
+        const userExists = await getUser(email)
 
-        if (Items && Items.length > 0) {
-            return sendError(404, { message: "Email already exists" })
-        }
+        if (userExists) return sendError(404, { message: "Email (account) already exists" })
 
         // Hash password
         const hashedPassowrd = await bcrypt.hash(password, 10)
@@ -42,7 +31,7 @@ export const handler = async (event) => {
             Item: user
         })
 
-        return sendResponse(200, { message: "Successfully created user account", user: user.userId })
+        return sendResponse(200, { message: "Successfully created user account", userId: user.userId })
 
     } catch (error) {
         console.error("Error:", error)
