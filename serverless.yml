@@ -83,7 +83,7 @@ functions:
 
 resources:
   Resources:
-    Quiztopia-usersTable:
+    QuiztopiaUsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: Quiztopia-UsersTable
@@ -104,7 +104,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    Quiztopia-QuizzesTable:
+    QuiztopiaQuizzesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: Quiztopia-QuizzesTable
@@ -125,7 +125,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    Quiztopia-LeaderboardTable:
+    QuiztopiaLeaderboardTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: Quiztopia-LeaderboardTable
@@ -133,8 +133,8 @@ resources:
           - AttributeName: quizId
             AttributeType: S
           - AttributeName: score
-            AttributeType: S
-        KeyScema:
+            AttributeType: N
+        KeySchema:
           - AttributeName: quizId
             KeyType: HASH
           - AttributeName: score
