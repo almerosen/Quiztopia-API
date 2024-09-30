@@ -4,7 +4,17 @@ import { sendResponse, sendError } from "../../utils/responses.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken'
 
+const passwordCheck = async (password, user) => {
+    const correctPassword = await bcrypt.compare(password, user.hashedPassword)
 
+    return correctPassword
+}
+
+const generateToken = (user) => {
+    const token = jwt.sign({ userId: user.userId, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
+
+    return token
+}
 
 export const handler = async (event) => {
     console.log(event)
@@ -13,9 +23,10 @@ export const handler = async (event) => {
         const { email, password } = JSON.parse(event.body)
 
         if (!email || !password) {
-            return sendError(404, { "Please fill in both email and password" })
+            return sendError(404, { message: "Please provide both email and password" })
         }
 
+        // Fetch user details
         const user = await getUser(email)
 
         if (!user) {
@@ -23,15 +34,17 @@ export const handler = async (event) => {
         }
 
         // Check if password is correct
-        const correctPassword = bcrypt.compare(password, user.hashedPassword)
+        const correctPassword = await passwordCheck(password, user)
 
         if (!correctPassword) return sendError(400, { message: "Invalid password or email" })
 
         // Generate token
-        const token = jwt.sign({ userId: user.userId, email: user.email}, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
+        const token = generateToken(user)
+
+        return sendResponse(200, { message: "Successfully logged in", token: token})
 
     } catch (error) {
         console.error("Error:", error)
-        return sendError(500, { message: "Failed to login" })
+        return sendError(500, { message: "Failed to login", error: error.message })
     }
 }

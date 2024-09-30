@@ -17,12 +17,12 @@ export const handler = async (event) => {
         if (userExists) return sendError(404, { message: "Email (account) already exists" })
 
         // Hash password
-        const hashedPassowrd = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = {
             userId: uuidv4(),
             email: email,
-            hashedPassowrd,
+            hashedPassword,
             createdAt: new Date().toISOString()
         }
 
