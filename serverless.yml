@@ -1,0 +1,142 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: almerosen
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: Quiztopia-API
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  environment:
+    JWT_SECRET_KEY: superhemlig_nyckel
+  iam:
+    role: arn:aws:iam::235494790392:role/lecture-role
+
+functions:
+  createUser:
+    handler: functions/createUser/index.handler
+    events:
+      - httpApi:
+          path: /user/create
+          method: post
+  loginUser:
+    handler: functions/loginUser/index.handler
+    events:
+      - httpApi:
+          path: /user/login
+          method: post
+
+  getAllQuizzes:
+    handler: functions/getAllQuizzes/index.handler
+    events:
+      - httpApi:
+          path: /quizzes
+          method: get
+
+  # Get spec quiz och få alla frågor
+  getQuizById:
+    handler: functions/getQuizById/index.handler
+    events:
+      - httpApi:
+          path: /quizzes/{quizId}/questions
+          method: get
+
+  # Create quiz kräver inloggning
+  createQuiz:
+    handler: functions/createQuiz/index.handler
+    events:
+      - httpApi:
+          path: /quizzes
+          method: post
+
+  # Delete quiz - kräver inloggning
+  deleteQuiz:
+    handler: functions/deleteQuiz/index.handler
+    events:
+      - httpApi:
+          path: /quizzes/{quizId}
+          method: delete
+
+  # Put question - kräver inloggning. Lägg till frågor till ett quiz
+  addQuestion:
+    handler: functions/addQuestion/index.handler
+    events:
+      - httpApi:
+          path: /quizzes/{quizId}/questions
+          method: put
+
+  # Post score  - kräver inloggning
+  submitScore:
+    handler: functions/submitScore/index.handler
+    events:
+      - httpApi:
+          path: /leaderboard/{quizId}/score
+          method: post
+
+  # Get leaderboard - hämta leaderboard för ett spec quiz. Kräver inloggning
+  getLeaderBoard:
+    handler: functions/getLeaderBoard/index.handler
+    events:
+      - httpApi:
+          path: /leaderboard/{quizId}
+          method: get
+
+resources:
+  Resources:
+    Quiztopia-usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Quiztopia-UsersTable
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: emailIndex
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    Quiztopia-QuizzesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Quiztopia-QuizzesTable
+        AttributeDefinitions:
+          - AttributeName: quizId
+            AttributeType: S
+          - AttributeName: creatorId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: quizId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: creatorIndex
+            KeySchema:
+              - AttributeName: creatorId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    Quiztopia-LeaderboardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Quiztopia-LeaderboardTable
+        AttributeDefinitions:
+          - AttributeName: quizId
+            AttributeType: S
+          - AttributeName: score
+            AttributeType: S
+        KeyScema:
+          - AttributeName: quizId
+            KeyType: HASH
+          - AttributeName: score
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
