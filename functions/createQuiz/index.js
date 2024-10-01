@@ -13,20 +13,20 @@ const createQuiz = async (event) => {
         // Get these from the decoded token in the verifyToken middleware
         const { userId, email } = event.user
 
-        const { title, questions } = JSON.parse(event.body)
+        const { quizName, questions } = JSON.parse(event.body)
     
         // Check if title is provided, that questions is passed in as an array, and that the array is not empty
-        if (!title || !Array.isArray(questions) || questions.length === 0) {
+        if (!quizName || !Array.isArray(questions) || questions.length === 0) {
             return sendError(400, { message: "Title and questions are required" })
         }
     
         // Create quiz
         const quiz = {
             quizId: uuidv4(),
-            title,
+            quizName,
             questions,
-            createdBy: userId,
-            createdByUser: email,
+            userId: userId,
+            createdBy: email,
             createdAt: new Date().toISOString()
         }
     
@@ -35,7 +35,7 @@ const createQuiz = async (event) => {
             Item: quiz
         })
 
-        return sendResponse(200, { message: "successfully created quiz", quiz})
+        return sendResponse(200, { message: "successfully created quiz", quizId: quiz.quizId})
 
     } catch (error) {
         console.error("Error:", error)

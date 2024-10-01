@@ -17,20 +17,20 @@ functions:
     handler: functions/createUser/index.handler
     events:
       - httpApi:
-          path: /user/create
+          path: /auth/signup
           method: post
   loginUser:
     handler: functions/loginUser/index.handler
     events:
       - httpApi:
-          path: /user/login
+          path: /auth/login
           method: post
 
   getAllQuizzes:
     handler: functions/getAllQuizzes/index.handler
     events:
       - httpApi:
-          path: /quizzes
+          path: /quiz
           method: get
 
   # Get spec quiz och få alla frågor
@@ -38,7 +38,7 @@ functions:
     handler: functions/getQuizById/index.handler
     events:
       - httpApi:
-          path: /quizzes/{quizId}/questions
+          path: /quiz/{userId}/{quizId}
           method: get
 
   # Create quiz kräver inloggning
@@ -46,7 +46,7 @@ functions:
     handler: functions/createQuiz/index.handler
     events:
       - httpApi:
-          path: /quizzes
+          path: /quiz
           method: post
 
   # Delete quiz - kräver inloggning
@@ -54,7 +54,7 @@ functions:
     handler: functions/deleteQuiz/index.handler
     events:
       - httpApi:
-          path: /quizzes/{quizId}
+          path: /quiz/{quizId}
           method: delete
 
   # Put question - kräver inloggning. Lägg till frågor till ett quiz
@@ -62,7 +62,7 @@ functions:
     handler: functions/addQuestion/index.handler
     events:
       - httpApi:
-          path: /quizzes/{quizId}/questions
+          path: /quiz/{quizId}/questions
           method: put
 
   # Post score  - kräver inloggning
@@ -111,16 +111,18 @@ resources:
         AttributeDefinitions:
           - AttributeName: quizId
             AttributeType: S
-          - AttributeName: creatorId
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: quizId
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: quizId
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         GlobalSecondaryIndexes:
-          - IndexName: creatorIndex
+          - IndexName: quizIndex
             KeySchema:
-              - AttributeName: creatorId
+              - AttributeName: quizId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
@@ -140,3 +142,8 @@ resources:
           - AttributeName: score
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+# [ { "M" : { "question" : { "S" : "Vilken är Sveriges nordligaste punkt?" },
+# "answer" : { "S" : "Treriksröset, Kiruna kommun, Lappland" },
+# "coordinates" : { "M" :
+#   { "longitude" : { "S" : "69.06003483075285" },
+#     "latitude" : { "S" : "20.548632469770467" } } } } } ]
