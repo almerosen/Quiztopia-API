@@ -70,7 +70,7 @@ functions:
     handler: functions/submitScore/index.handler
     events:
       - httpApi:
-          path: /leaderboard/{quizId}/score
+          path: /quiz/{quizId}/score
           method: post
 
   # Get leaderboard - hämta leaderboard för ett spec quiz. Kräver inloggning
