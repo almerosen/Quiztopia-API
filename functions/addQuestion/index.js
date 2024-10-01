@@ -15,7 +15,7 @@ const addQuestion = async (event) => {
 
         const { newQuestion } = JSON.parse(event.body)
 
-        if(!newQuestion || !Array.isArray(newQuestion)) {
+        if(!newQuestion || newQuestion.length === 0 || !Array.isArray(newQuestion)) {
             return sendError(400, { message: "Question needs to be in correct format" })
         }
 

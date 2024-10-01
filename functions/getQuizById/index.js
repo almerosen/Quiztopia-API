@@ -7,13 +7,15 @@ export const handler = async (event) => {
     try {
         const { userId, quizId } = event.pathParameters
 
+        if (!userId) return sendError(400, { message: "userId is missing" })
+        if (!quizId) return sendError(400, { message: "quizId is missing" })
+
         const { Item } = await db.get({
             TableName: "Quiztopia-QuizzesTable",
             Key: { 
                 userId: userId,
                 quizId: quizId
             }
-            
         })
         console.log("Item:", Item)
 

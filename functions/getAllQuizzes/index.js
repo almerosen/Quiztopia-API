@@ -10,7 +10,7 @@ export const handler = async (event) => {
             // ProjectionExpression: "quizName, createdBy" // name of the quiz and who created it
         })
 
-        return sendResponse(200, Items)
+        return sendResponse(200, { message: "Successfully retrived quizzes", quizes: Items})
 
     }catch (error) {
         console.error("Error:", error)
