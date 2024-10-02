@@ -11,7 +11,7 @@ const createQuiz = async (event) => {
     try {
 
         // Get these from the decoded token in the verifyToken middleware
-        const { userId, email } = event.user
+        const { userId, username } = event.user
 
         const { quizName, questions } = JSON.parse(event.body)
     
@@ -26,7 +26,7 @@ const createQuiz = async (event) => {
             quizName,
             questions,
             userId: userId,
-            createdBy: email,
+            createdBy: username,
             createdAt: new Date().toISOString()
         }
     

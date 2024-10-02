@@ -75,10 +75,10 @@ functions:
 
   # Get leaderboard - hämta leaderboard för ett spec quiz. Kräver inloggning
   getLeaderBoard:
-    handler: functions/getLeaderBoard/index.handler
+    handler: functions/getLeaderboard/index.handler
     events:
       - httpApi:
-          path: /leaderboard/{quizId}
+          path: /quiz/{quizId}/leaderboard
           method: get
 
 resources:
@@ -86,20 +86,20 @@ resources:
     QuiztopiaUsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Quiztopia-UsersTable
+        TableName: Quiztopia-Users
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: email
+          - AttributeName: username
             AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         GlobalSecondaryIndexes:
-          - IndexName: emailIndex
+          - IndexName: usernameIndex
             KeySchema:
-              - AttributeName: email
+              - AttributeName: username
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
@@ -127,23 +127,30 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    # quizId as partition key and userId as sort key
     QuiztopiaLeaderboardTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Quiztopia-LeaderboardTable
+        TableName: Quiztopia-Leaderboard-Table
         AttributeDefinitions:
           - AttributeName: quizId
+            AttributeType: S
+          - AttributeName: userId
             AttributeType: S
           - AttributeName: score
             AttributeType: N
         KeySchema:
           - AttributeName: quizId
             KeyType: HASH
-          - AttributeName: score
+          - AttributeName: userId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-# [ { "M" : { "question" : { "S" : "Vilken är Sveriges nordligaste punkt?" },
-# "answer" : { "S" : "Treriksröset, Kiruna kommun, Lappland" },
-# "coordinates" : { "M" :
-#   { "longitude" : { "S" : "69.06003483075285" },
-#     "latitude" : { "S" : "20.548632469770467" } } } } } ]
+        GlobalSecondaryIndexes:
+          - IndexName: quizIdScoreIndex
+            KeySchema:
+              - AttributeName: quizId
+                KeyType: HASH
+              - AttributeName: score
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL

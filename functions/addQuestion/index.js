@@ -19,7 +19,7 @@ const addQuestion = async (event) => {
             return sendError(400, { message: "Question needs to be in correct format" })
         }
 
-        // Check if the quiz exists and if it belongs to logged in user
+        // Check if the quiz exists and if the logged in user created it
         const quizExists = await db.get({
             TableName: "Quiztopia-QuizzesTable",
             Key: { quizId, userId}

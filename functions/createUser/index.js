@@ -8,26 +8,26 @@ export const handler = async (event) => {
     console.log(event)
 
     try {
-        const { email, password } = JSON.parse(event.body)
+        const { username, password } = JSON.parse(event.body)
 
-        if (!email || !password) return sendError(400, { message: "Please provide both email and password" })
+        if (!username || !password) return sendError(400, { message: "Please provide both username and password" })
 
-        const userExists = await getUser(email)
+        const userExists = await getUser(username)
 
-        if (userExists) return sendError(404, { message: "Email (account) already exists" })
+        if (userExists) return sendError(404, { message: "Username (account) already exists" })
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = {
             userId: uuidv4(),
-            email: email,
+            username: username.toLowerCase(),
             hashedPassword,
             createdAt: new Date().toISOString()
         }
 
         await db.put({
-            TableName: "Quiztopia-UsersTable",
+            TableName: "Quiztopia-Users",
             Item: user
         })
 

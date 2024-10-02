@@ -11,7 +11,7 @@ const passwordCheck = async (password, user) => {
 }
 
 const generateToken = (user) => {
-    const token = jwt.sign({ userId: user.userId, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
+    const token = jwt.sign({ userId: user.userId, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
 
     return token
 }
@@ -20,23 +20,23 @@ export const handler = async (event) => {
     console.log(event)
 
     try {
-        const { email, password } = JSON.parse(event.body)
+        const { username, password } = JSON.parse(event.body)
 
-        if (!email || !password) {
-            return sendError(404, { message: "Please provide both email and password" })
+        if (!username || !password) {
+            return sendError(404, { message: "Please provide both username and password" })
         }
 
         // Fetch user details
-        const user = await getUser(email)
+        const user = await getUser(username)
 
         if (!user) {
-            return sendError(400, { message: "User account (email) does not exist" })
+            return sendError(400, { message: "User account (username) does not exist" })
         }
 
         // Check if password is correct
         const correctPassword = await passwordCheck(password, user)
 
-        if (!correctPassword) return sendError(400, { message: "Invalid password or email" })
+        if (!correctPassword) return sendError(400, { message: "Invalid password or username" })
 
         // Generate token
         const token = generateToken(user)

@@ -1,13 +1,13 @@
 import { db } from "../services/db.js";
 
-export const getUser = async (email) => {
+export const getUser = async (username) => {
     try {
         const {Items} = await db.query({
-            TableName: "Quiztopia-UsersTable",
-            IndexName: "emailIndex",
-            KeyConditionExpression: "email = :email",
+            TableName: "Quiztopia-Users",
+            IndexName: "usernameIndex",
+            KeyConditionExpression: "username = :username",
             ExpressionAttributeValues: {
-                ":email": email
+                ":username": username.toLowerCase()
             }
         })
         console.log("Items:", Items, "Items length:", Items.length)
