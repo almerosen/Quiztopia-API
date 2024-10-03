@@ -34,7 +34,7 @@ const addQuestion = async (event) => {
             TableName: "Quiztopia-QuizzesTable",
             Key: { quizId, userId },
             UpdateExpression: "SET #q = list_append(questions, :newQuestion)",
-            ExpressionAttributeNames: { "#q": "questions"},
+            ExpressionAttributeNames: { "#q": "questions"}, // not a reserved name but wanted to test this method
             ExpressionAttributeValues: {
                 ":newQuestion": newQuestion
             },

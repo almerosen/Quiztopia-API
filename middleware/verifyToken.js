@@ -7,7 +7,7 @@ export const verifyToken = {
             const authHeader = request.event.headers.authorization
 
             if (!authHeader) {
-                return sendError(404, { message: "No token provided" })
+                return sendError(400, { message: "No token provided" })
             }
 
             const token = authHeader.replace("Bearer ", "")

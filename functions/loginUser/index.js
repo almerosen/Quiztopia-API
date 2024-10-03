@@ -23,14 +23,14 @@ export const handler = async (event) => {
         const { username, password } = JSON.parse(event.body)
 
         if (!username || !password) {
-            return sendError(404, { message: "Please provide both username and password" })
+            return sendError(400, { message: "Please provide both username and password" })
         }
 
         // Fetch user details
         const user = await getUser(username)
 
         if (!user) {
-            return sendError(400, { message: "User account (username) does not exist" })
+            return sendError(404, { message: "User account (username) does not exist" })
         }
 
         // Check if password is correct

@@ -7,6 +7,7 @@ export const handler = async (event) => {
     try {
         const { quizId } = event.pathParameters
 
+        // Get leaderboard with top 3 scores for the quiz
         const { Items } = await db.query({
             TableName: "Quiztopia-Leaderboard-Table",
             IndexName: "quizIdScoreIndex",
@@ -20,6 +21,10 @@ export const handler = async (event) => {
         })
         console.log("result:", Items)
         const topScores = Items
+
+        if (!topScores || topScores.length === 0) {
+            return sendError(400, { message: `QuizId ${quizId} not found` })
+        }
 
         // To retrieve the quizName
         const quizData = await db.query({

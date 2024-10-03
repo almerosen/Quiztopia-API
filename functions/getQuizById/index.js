@@ -9,15 +9,12 @@ export const handler = async (event) => {
 
         const { Item } = await db.get({
             TableName: "Quiztopia-QuizzesTable",
-            Key: { 
-                userId: userId,
-                quizId: quizId
-            }
+            Key: { userId, quizId }
         })
         console.log("Item:", Item)
 
         if (!Item) {
-            return sendError(400, { message: `Quiz with Id ${quizId} not found for user ${userId}` })
+            return sendError(404, { message: `Quiz with Id ${quizId} not found for user ${userId}` })
         }
 
         return sendResponse(200, { message: "Successfully retrieved quiz" , quiz: Item})
