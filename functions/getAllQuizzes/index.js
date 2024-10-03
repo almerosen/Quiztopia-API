@@ -7,6 +7,8 @@ export const handler = async (event) => {
     try {
         const { Items } = await db.scan({
             TableName: "Quiztopia-QuizzesTable",
+            IndexName: "createdAtIndex",
+            ScanIndexForward: false // quizzes in descending ordner by createdAt date
             // ProjectionExpression: "quizName, createdBy" // only retrieve name of the quiz and who created it
         })
 
@@ -14,6 +16,6 @@ export const handler = async (event) => {
 
     }catch (error) {
         console.error("Error:", error)
-        return sendError(500, { message: "Failed to get quzzes" })
+        return sendError(500, { message: "Failed to get quizzes" })
     }
 }

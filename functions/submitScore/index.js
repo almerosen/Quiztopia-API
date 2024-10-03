@@ -11,8 +11,10 @@ const submitScore = async (event) => {
         const { quizId } = event.pathParameters
         const { score } = JSON.parse(event.body)
 
-        if (!score || (score < 0) || (score > 5)) return sendError(400, { message: "Please provide a score between 0 - 5" })
-
+        if (score === undefined || score === null) return sendError(404, { message: "No score provided" })
+        if ((score < 0) || (score > 5)) return sendError(400, { message: "Score must be min 0 and max 5" })
+        if ((isNaN(score))) return sendError(400, { message: "Score must be a number" })
+        
         // Retrieve quiz details - to prevent user from submitting score on their own quiz  
         const { Item } = await db.get({
             TableName: "Quiztopia-QuizzesTable",

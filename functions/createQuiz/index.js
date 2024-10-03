@@ -16,7 +16,7 @@ const createQuiz = async (event) => {
         const { quizName, questions } = JSON.parse(event.body)
     
         // Check if title is provided, that questions is passed in as an array, and that the array is not empty
-        if (!quizName || !Array.isArray(questions) || questions.length === 0) {
+        if (!quizName || !questions || !Array.isArray(questions) || questions.length === 0) {
             return sendError(400, { message: "Title and questions are required" })
         }
     

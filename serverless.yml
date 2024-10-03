@@ -113,6 +113,8 @@ resources:
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
@@ -123,6 +125,12 @@ resources:
           - IndexName: quizIndex
             KeySchema:
               - AttributeName: quizId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: createdAtIndex
+            KeySchema:
+              - AttributeName: createdAt
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
