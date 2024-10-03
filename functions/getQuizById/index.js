@@ -20,7 +20,7 @@ export const handler = async (event) => {
             return sendError(400, { message: `Quiz with Id ${quizId} not found for user ${userId}` })
         }
 
-        return sendResponse(200, { message: "Successfully retreived quiz" , quiz: Item})
+        return sendResponse(200, { message: "Successfully retrieved quiz" , quiz: Item})
 
     } catch (error) {
         console.error("Error:", error)

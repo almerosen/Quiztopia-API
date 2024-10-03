@@ -13,12 +13,12 @@ const deleteQuiz = async (event) => {
         if (!quizId) return sendError(404, { message: "QuizId is missing" })
 
         // Check if quiz exists and that it belongs to logged in user
-        const quizzExist = await db.get({
+        const quizExist = await db.get({
             TableName: "Quiztopia-QuizzesTable",
             Key: { userId, quizId }
         })
 
-        if (!quizzExist.Item) return sendError(400, { message: "Quiz does not exist or you can not delete someone else's quiz" })
+        if (!quizExist.Item) return sendError(400, { message: "Quiz does not exist or you can not delete someone else's quiz" })
 
         const deletedQuiz = await db.delete({
             TableName: "Quiztopia-QuizzesTable",

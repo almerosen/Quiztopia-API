@@ -19,6 +19,7 @@ export const handler = async (event) => {
             Limit: 3 // Get top 3 scores
         })
         console.log("result:", Items)
+        const topScores = Items
 
         // To retrieve the quizName
         const quizData = await db.query({
@@ -27,8 +28,7 @@ export const handler = async (event) => {
             KeyConditionExpression: "quizId = :quizId",
             ExpressionAttributeValues: {
                 ":quizId": quizId
-            }
-            
+            }    
         })
 
         if (!quizData.Items || quizData.Items === 0) {
@@ -37,15 +37,7 @@ export const handler = async (event) => {
 
         const quizName = quizData.Items[0].quizName
 
-        const topScores = Items
-
-        // const formattedScores = topScores.map(item => ({
-        //     username: item.username,
-        //     score: item.score
-        // }))
-
         return sendResponse(200, { message: "Successfully retreived leaderboard", quizName, topScores })
-
 
     } catch (error) {
         console.error("Error:", error)

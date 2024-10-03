@@ -24,6 +24,7 @@ const addQuestion = async (event) => {
             TableName: "Quiztopia-QuizzesTable",
             Key: { quizId, userId}
         })
+        console.log("quizExists:", quizExists.Item)
 
         if(!quizExists.Item) {
             return sendError(404, { message: "Quiz does not exist or you can not modify someone else's quiz" })
@@ -40,13 +41,13 @@ const addQuestion = async (event) => {
             ReturnValues: "ALL_NEW"
         })
 
-        console.log("updatedQuestions:", updateQuestions)
+        console.log("updatedQuestions:", updateQuestions.Attributes)
 
         return sendResponse(200, { message: "Successfully added question", updatedQuestions: updateQuestions.Attributes})
 
     } catch (error) {
         console.error("Error:", error)
-        return sendError(500, { message: "Failed to add question" })
+        return sendError(500, { message: "Failed to add question", error: error.message })
     }
 }
 

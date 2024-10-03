@@ -41,7 +41,7 @@ export const handler = async (event) => {
         // Generate token
         const token = generateToken(user)
 
-        return sendResponse(200, { message: "Successfully logged in", token: token})
+        return sendResponse(200, { message: "Successfully logged in", user: user.username, token: token})
 
     } catch (error) {
         console.error("Error:", error)
