@@ -22,8 +22,9 @@ export const handler = async (event) => {
         console.log("result:", Items)
         const topScores = Items
 
+        // Return if the quizId does not exist
         if (!topScores || topScores.length === 0) {
-            return sendError(400, { message: `QuizId ${quizId} not found` })
+            return sendError(400, { message: `Leaderboard for quizId ${quizId} not found` })
         }
 
         // To retrieve the quizName
