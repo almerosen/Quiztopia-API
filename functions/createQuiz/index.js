@@ -25,7 +25,7 @@ const createQuiz = async (event) => {
             quizId: uuidv4(),
             quizName,
             questions,
-            userId: userId,
+            userId,
             createdBy: username,
             createdAt: new Date().toISOString()
         }
@@ -35,7 +35,7 @@ const createQuiz = async (event) => {
             Item: quiz
         })
 
-        return sendResponse(200, { message: "successfully created quiz", quizId: quiz.quizId})
+        return sendResponse(200, { message: "successfully created quiz", quizName: quizName, quizId: quiz.quizId})
 
     } catch (error) {
         console.error("Error:", error)

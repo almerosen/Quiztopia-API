@@ -16,7 +16,7 @@ export const handler = async (event) => {
 
         if (userExists) return sendError(400, { message: "Username (account) already exists" })
 
-        // Hash password
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = {

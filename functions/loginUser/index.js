@@ -1,15 +1,16 @@
-import { db } from "../../services/db.js"
 import { getUser } from "../../utils/getUser.js"
 import { sendResponse, sendError } from "../../utils/responses.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken'
 
+// Check if the password is correct
 const passwordCheck = async (password, user) => {
     const correctPassword = await bcrypt.compare(password, user.hashedPassword)
 
     return correctPassword
 }
 
+// Create a token
 const generateToken = (user) => {
     const token = jwt.sign({ userId: user.userId, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
 

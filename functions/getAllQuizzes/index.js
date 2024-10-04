@@ -7,7 +7,7 @@ export const handler = async (event) => {
     try {
         const { Items } = await db.scan({
             TableName: "Quiztopia-QuizzesTable",
-            IndexName: "createdAtIndex",
+            // IndexName: "createdAtIndex",
             ScanIndexForward: false // quizzes in descending order by createdAt date
             // ProjectionExpression: "quizName, createdBy" // only retrieve name of the quiz and who created it
         })

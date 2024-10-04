@@ -154,7 +154,7 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         GlobalSecondaryIndexes:
-          - IndexName: quizIdScoreIndex # to sort quiz by score
+          - IndexName: quizIdScoreIndex
             KeySchema:
               - AttributeName: quizId
                 KeyType: HASH
