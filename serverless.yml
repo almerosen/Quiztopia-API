@@ -19,6 +19,7 @@ functions:
       - httpApi:
           path: /auth/signup
           method: post
+
   loginUser:
     handler: functions/loginUser/index.handler
     events:
@@ -33,7 +34,7 @@ functions:
           path: /quiz
           method: get
 
-  # Get spec quiz och få alla frågor
+  # Get quiz by userId and quizId
   getQuizById:
     handler: functions/getQuizById/index.handler
     events:
@@ -41,7 +42,7 @@ functions:
           path: /quiz/{userId}/{quizId}
           method: get
 
-  # Create quiz kräver inloggning
+  # Create quiz - token required
   createQuiz:
     handler: functions/createQuiz/index.handler
     events:
@@ -49,7 +50,7 @@ functions:
           path: /quiz
           method: post
 
-  # Delete quiz - kräver inloggning
+  # Delete quiz - token required
   deleteQuiz:
     handler: functions/deleteQuiz/index.handler
     events:
@@ -57,7 +58,7 @@ functions:
           path: /quiz/{quizId}
           method: delete
 
-  # Put question - kräver inloggning. Lägg till frågor till ett quiz
+  # Put - add question to quiz - token required
   addQuestion:
     handler: functions/addQuestion/index.handler
     events:
@@ -65,7 +66,7 @@ functions:
           path: /quiz/{quizId}/questions
           method: put
 
-  # Post score  - kräver inloggning
+  # Post score on quiz - token required
   submitScore:
     handler: functions/submitScore/index.handler
     events:
@@ -73,7 +74,7 @@ functions:
           path: /quiz/{quizId}/score
           method: post
 
-  # Get leaderboard - hämta leaderboard för ett spec quiz. Kräver inloggning
+  # Get leaderboard - get top scores for a quiz
   getLeaderBoard:
     handler: functions/getLeaderboard/index.handler
     events:
@@ -135,7 +136,6 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    # quizId as partition key and userId as sort key
     QuiztopiaLeaderboardTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -154,7 +154,7 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         GlobalSecondaryIndexes:
-          - IndexName: quizIdScoreIndex
+          - IndexName: quizIdScoreIndex # to sort quiz by score
             KeySchema:
               - AttributeName: quizId
                 KeyType: HASH
