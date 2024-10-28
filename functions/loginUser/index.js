@@ -1,14 +1,9 @@
 import { getUser } from "../../utils/getUser.js"
 import { sendResponse, sendError } from "../../utils/responses.js"
+import { passwordCheck } from "../../utils/checkPassword.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken'
 
-// Check if the password is correct
-const passwordCheck = async (password, user) => {
-    const correctPassword = await bcrypt.compare(password, user.hashedPassword)
-
-    return correctPassword
-}
 
 // Create a token
 const generateToken = (user) => {
