@@ -1,16 +1,8 @@
 import { getUser } from "../../utils/getUser.js"
 import { sendResponse, sendError } from "../../utils/responses.js"
 import { passwordCheck } from "../../utils/checkPassword.js"
-import bcrypt from "bcryptjs"
-import jwt from 'jsonwebtoken'
+import { generateToken } from "../../utils/generateToken.js"
 
-
-// Create a token
-const generateToken = (user) => {
-    const token = jwt.sign({ userId: user.userId, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
-
-    return token
-}
 
 export const handler = async (event) => {
     console.log(event)
@@ -35,7 +27,7 @@ export const handler = async (event) => {
         if (!correctPassword) return sendError(400, { message: "Invalid password or username" })
 
         // Generate token
-        const token = generateToken(user)
+        const token = generateToken({ userId: user.userId, username: user.username })
 
         return sendResponse(200, { message: "Successfully logged in", user: user.username, token: token})
 
